@@ -100,7 +100,9 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/_8sdp"
-                        android:src="@drawable/ic_eye_open" />
+                        android:src="@drawable/ic_eye_open"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/_8sdp" />
 
                 </RelativeLayout>
 
@@ -132,7 +134,8 @@
                         android:layout_alignParentEnd="true"
                         android:text="@string/forgot_password"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="@dimen/text_small" />
+                        android:textSize="@dimen/text_small"
+                        android:layout_alignParentRight="true" />
 
                 </RelativeLayout>
 
