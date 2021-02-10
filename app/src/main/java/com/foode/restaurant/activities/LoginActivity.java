@@ -13,9 +13,11 @@ import android.widget.ImageView;
 
 import com.foode.restaurant.R;
 
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 
 public class LoginActivity extends AppCompatActivity {
     Context context;
@@ -30,16 +32,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
         context = this;
+
         eyeImg.setTag(1);
     }
-
 
     @OnClick({R.id.eye_img})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-
             case R.id.eye_img:
                 if (eyeImg.getTag().equals(1)) {
                     edPassword.setTransformationMethod(null);
