@@ -8,7 +8,7 @@ public class BuildConfigure {
 
 
     /*   Dev Mode*/
-    public static String BASE_URL = "https://foodepartner.com/";
+    public static String BASE_URL = "http://foodepartner.com/sipl/laravel/foodpanel/api/shop/";
     //public static String BASE_URL = "http://phplaravel-258426-869731.cloudwaysapps.com/";
     //public static String CLIENT_SECRET = "IXKpta3n8DWBCVMHNBvgNmzPmEB7uuXdAZeUbTVh";
     public static String CLIENT_SECRET = "nSvUYPJvKVL9YRYhfrGhVg0bDC7RgdrHqwVTIER2";

@@ -1,17 +1,18 @@
 package com.foode.restaurant.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
-
 import com.foode.restaurant.R;
+import com.foode.restaurant.common.AppSettings;
+import com.foode.restaurant.view.BaseActivity;
 import com.google.android.material.snackbar.Snackbar;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     Context context;
 
@@ -26,8 +27,13 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //Do something after 3000ms
-                startActivity(new Intent(context, LoginActivity.class));
-                finish();
+                if (AppSettings.getString(AppSettings.shopId).isEmpty()) {
+                    startActivity(new Intent(mActivity, LoginActivity.class));
+                    finish();
+                } else {
+                    startActivity(new Intent(mActivity, MainActivity.class));
+                    finish();
+                }
 
             }
         }, 3000);

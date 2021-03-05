@@ -59,7 +59,7 @@
                     android:background="@drawable/shadow_view">
 
                     <EditText
-                        android:id="@+id/ed_mobile_number"
+                        android:id="@+id/etEmailAddress"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_alignParentBottom="true"
@@ -79,7 +79,7 @@
                     android:layout_marginTop="16dp">
 
                     <EditText
-                        android:id="@+id/ed_password"
+                        android:id="@+id/etPassword"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/edit_text_size"
                         android:background="@drawable/shadow_view"
@@ -94,7 +94,7 @@
                         app:theme="@style/MyEditTextTheme" />
 
                     <ImageView
-                        android:id="@+id/eye_img"
+                        android:id="@+id/ivPassword"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_alignParentEnd="true"
@@ -107,7 +107,7 @@
                 </RelativeLayout>
 
                 <Button
-                    android:id="@+id/login_btn"
+                    android:id="@+id/btnSignIn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
@@ -128,7 +128,7 @@
 
                     <TextView
                         android:gravity="right"
-                        android:id="@+id/forgot_password"
+                        android:id="@+id/tvForgotPassword"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
