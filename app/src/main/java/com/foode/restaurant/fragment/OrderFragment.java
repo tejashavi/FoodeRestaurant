@@ -1,66 +1,92 @@
 package com.foode.restaurant.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.foode.restaurant.R;
+import com.foode.restaurant.adapter.IncomingOrder;
+import com.foode.restaurant.helper.ConnectionHelper;
+import com.foode.restaurant.utils.AppUtils;
+import com.foode.restaurant.view.BaseFragment;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link OrderFragment#newInstance} factory method to
+ * <p>
  * create an instance of this fragment.
  */
-public class OrderFragment extends Fragment {
+public class OrderFragment extends BaseFragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public OrderFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrderFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static OrderFragment newInstance(String param1, String param2) {
-        OrderFragment fragment = new OrderFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    private ViewGroup toolbar;
+    ConnectionHelper connectionHelper;
+    private View toolbarLayout;
+    SwitchMaterial switchOnOff;
+    RecyclerView rvOrderList;
+    TextView tvNoOrder;
+    IncomingOrder incomingOrder;
+    GridLayoutManager gridLayoutManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order, container, false);
+        View view = inflater.inflate(R.layout.fragment_order, container, false);
+        findViewById(view);
+        return view;
     }
+
+    void findViewById(View view) {
+        connectionHelper = new ConnectionHelper(mActivity);
+        rvOrderList = view.findViewById(R.id.rvOrderList);
+        tvNoOrder = view.findViewById(R.id.tvNoOrder);
+        toolbar = (ViewGroup) getActivity().findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.VISIBLE);
+        toolbarLayout = LayoutInflater.from(mActivity).inflate(R.layout.toolbar_home, toolbar, false);
+        switchOnOff = toolbarLayout.findViewById(R.id.switchOnOff);
+        toolbar.addView(toolbarLayout);
+        switchOnOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AppUtils.showToastSort(mActivity, "Show");
+            }
+        });
+
+    }
+   /* public void onActivityCreated(Bundle savedInstanceState) {
+        // TODO Auto-generated method stub
+        super.onActivityCreated(savedInstanceState);
+        System.out.println("HomeFragment");
+        connectionHelper = new ConnectionHelper(mActivity);
+        toolbar = (ViewGroup) getActivity().findViewById(R.id.toolbar);
+        toolbar.setVisibility(View.VISIBLE);
+        toolbarLayout = LayoutInflater.from(mActivity).inflate(R.layout.toolbar_home, toolbar, false);
+        toolbar.addView(toolbarLayout);
+
+    }*/
 }
