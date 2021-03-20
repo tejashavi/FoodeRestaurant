@@ -53,15 +53,15 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
                     android:background="@color/colorAccent"
                     android:text="Order List"
                     android:textAllCaps="false"
                     android:textColor="@color/colorTextWhite" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:background="@color/colorAccent"
@@ -70,8 +70,8 @@
                     android:tint="@color/colorTextWhite" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/_10sdp"
                     android:background="@color/colorAccent"

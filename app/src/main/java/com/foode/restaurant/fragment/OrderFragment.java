@@ -42,9 +42,7 @@ public class OrderFragment extends BaseFragment {
         // Required empty public constructor
     }
 
-    private ViewGroup toolbar;
     ConnectionHelper connectionHelper;
-    private View toolbarLayout;
     SwitchMaterial switchOnOff;
     RecyclerView rvOrderList;
     TextView tvNoOrder;
@@ -64,11 +62,8 @@ public class OrderFragment extends BaseFragment {
         connectionHelper = new ConnectionHelper(mActivity);
         rvOrderList = view.findViewById(R.id.rvOrderList);
         tvNoOrder = view.findViewById(R.id.tvNoOrder);
-        toolbar = (ViewGroup) getActivity().findViewById(R.id.toolbar);
-        toolbar.setVisibility(View.VISIBLE);
-        toolbarLayout = LayoutInflater.from(mActivity).inflate(R.layout.toolbar_home, toolbar, false);
-        switchOnOff = toolbarLayout.findViewById(R.id.switchOnOff);
-        toolbar.addView(toolbarLayout);
+        switchOnOff = view.findViewById(R.id.switchOnOff);
+
         switchOnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
