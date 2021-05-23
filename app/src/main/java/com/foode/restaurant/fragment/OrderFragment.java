@@ -1,34 +1,33 @@
 package com.foode.restaurant.fragment;
 
-import android.content.Intent;
+
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.foode.restaurant.R;
 import com.foode.restaurant.adapter.IncomingOrder;
+import com.foode.restaurant.build.api.ApiClient;
+import com.foode.restaurant.build.api.ApiInterface;
+import com.foode.restaurant.common.AppSettings;
 import com.foode.restaurant.helper.ConnectionHelper;
+import com.foode.restaurant.models.CommonModel;
 import com.foode.restaurant.utils.AppUtils;
 import com.foode.restaurant.view.BaseFragment;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,12 +47,14 @@ public class OrderFragment extends BaseFragment {
     TextView tvNoOrder;
     IncomingOrder incomingOrder;
     GridLayoutManager gridLayoutManager;
+    ApiInterface apiInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_order, container, false);
+        apiInterface = ApiClient.getRetrofit().create(ApiInterface.class);
         findViewById(view);
         return view;
     }
@@ -67,21 +68,33 @@ public class OrderFragment extends BaseFragment {
         switchOnOff.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                AppUtils.showToastSort(mActivity, "Show");
+                if (connectionHelper.isConnectingToInternet()) {
+                    updateStatus("1");
+                } else {
+                    AppUtils.showToastSort(mActivity, getString(R.string.errorInternet));
+                }
             }
         });
 
-    }
-   /* public void onActivityCreated(Bundle savedInstanceState) {
-        // TODO Auto-generated method stub
-        super.onActivityCreated(savedInstanceState);
-        System.out.println("HomeFragment");
-        connectionHelper = new ConnectionHelper(mActivity);
-        toolbar = (ViewGroup) getActivity().findViewById(R.id.toolbar);
-        toolbar.setVisibility(View.VISIBLE);
-        toolbarLayout = LayoutInflater.from(mActivity).inflate(R.layout.toolbar_home, toolbar, false);
-        toolbar.addView(toolbarLayout);
 
-    }*/
+    }
+
+    void updateStatus(String status) {
+        HashMap<String, String> hm = new HashMap<>();
+        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        hm.put("shop_status", status);
+        Call<CommonModel> commonModelCall = apiInterface.updateRestaurant(hm);
+        commonModelCall.enqueue(new Callback<CommonModel>() {
+            @Override
+            public void onResponse(Call<CommonModel> call, Response<CommonModel> response) {
+                CommonModel commonModel = response.body();
+            }
+
+            @Override
+            public void onFailure(Call<CommonModel> call, Throwable t) {
+
+            }
+        });
+    }
 }
+

@@ -1,9 +1,6 @@
 package com.foode.restaurant.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-
-import android.content.Context;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -83,7 +80,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 return;
 
             case R.id.btnSignIn:
-                if (etEmailAddress.getText().toString().isEmpty()) {
+                startActivity(new Intent(mActivity, MainActivity.class));
+                finish();
+               /* if (etEmailAddress.getText().toString().isEmpty()) {
                     AppUtils.showToastSort(mActivity, "Please enter email address");
                 } else if (etPassword.getText().toString().isEmpty()) {
                     AppUtils.showToastSort(mActivity, "Please enter password");
@@ -91,7 +90,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     login();
                 } else {
                     AppUtils.showToastSort(mActivity, getString(R.string.errorInternet));
-                }
+                }*/
 
                 return;
         }

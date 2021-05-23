@@ -1,5 +1,6 @@
 package com.foode.restaurant.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,60 +8,111 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.foode.restaurant.R;
+import com.foode.restaurant.activities.LoginActivity;
+import com.foode.restaurant.build.api.ApiClient;
+import com.foode.restaurant.build.api.ApiInterface;
+import com.foode.restaurant.common.AppSettings;
+import com.foode.restaurant.helper.ConnectionHelper;
+import com.foode.restaurant.models.ProfileModel;
+import com.foode.restaurant.utils.AppUtils;
+import com.foode.restaurant.view.BaseFragment;
+
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link MoreFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MoreFragment extends Fragment {
+public class MoreFragment extends BaseFragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public MoreFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MoreFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MoreFragment newInstance(String param1, String param2) {
-        MoreFragment fragment = new MoreFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    ConnectionHelper connectionHelper;
+    ApiInterface apiInterface;
+    TextView tvName, tvEmail, tvPhone, tvDescription, tvOfferMinAmount,
+            tvOfferPercent, tvEstimatedDeliveryTime, tvAddress, tvStatus;
+    ImageView ivLogout;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_more, container, false);
+        View view = inflater.inflate(R.layout.fragment_more, container, false);
+        findViewById(view);
+        return view;
+    }
+
+    void findViewById(View view) {
+        connectionHelper = new ConnectionHelper(mActivity);
+        apiInterface = ApiClient.getRetrofit().create(ApiInterface.class);
+        tvName = view.findViewById(R.id.tvName);
+        tvEmail = view.findViewById(R.id.tvEmail);
+        tvPhone = view.findViewById(R.id.tvPhone);
+        tvDescription = view.findViewById(R.id.tvDescription);
+        tvOfferMinAmount = view.findViewById(R.id.tvOfferMinAmount);
+        tvOfferPercent = view.findViewById(R.id.tvOfferPercent);
+        tvEstimatedDeliveryTime = view.findViewById(R.id.tvEstimatedDeliveryTime);
+        tvAddress = view.findViewById(R.id.tvAddress);
+        tvStatus = view.findViewById(R.id.tvStatus);
+        ivLogout = view.findViewById(R.id.ivLogout);
+        if (connectionHelper.isConnectingToInternet()) {
+            getProfile();
+        } else {
+            AppUtils.showToastSort(mActivity, getString(R.string.errorInternet));
+        }
+
+        ivLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppSettings.clearSharedPreference();
+                startActivity(new Intent(mActivity, LoginActivity.class));
+            }
+        });
+    }
+
+    void getProfile() {
+        AppUtils.showRequestDialog(mActivity);
+        HashMap<String, String> hm = new HashMap<>();
+        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        Call<ProfileModel> profileModelCall = apiInterface.getProfile(hm);
+        profileModelCall.enqueue(new Callback<ProfileModel>() {
+            @Override
+            public void onResponse(Call<ProfileModel> call, Response<ProfileModel> response) {
+                AppUtils.hideDialog();
+                ProfileModel profileModel = response.body();
+                if (profileModel.getStatus().equalsIgnoreCase("SUCCESS")) {
+                    tvName.setText(profileModel.getData().get(0).getName());
+                    tvEmail.setText(profileModel.getData().get(0).getEmail());
+                    tvPhone.setText(profileModel.getData().get(0).getPhone());
+                    tvDescription.setText(profileModel.getData().get(0).getDescription());
+                    tvOfferMinAmount.setText(profileModel.getData().get(0).getOfferMinAmount() + "");
+                    tvOfferPercent.setText(profileModel.getData().get(0).getOfferPercent() + "");
+                    tvEstimatedDeliveryTime.setText(profileModel.getData().get(0).getEstimatedDeliveryTime() + "");
+                    tvAddress.setText(profileModel.getData().get(0).getAddress());
+                    tvStatus.setText(profileModel.getData().get(0).getStatus());
+                } else {
+                    AppUtils.showToastSort(mActivity, profileModel.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ProfileModel> call, Throwable t) {
+                AppUtils.hideDialog();
+            }
+        });
+
+
     }
 }

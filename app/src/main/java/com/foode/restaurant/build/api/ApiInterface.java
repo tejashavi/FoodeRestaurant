@@ -6,7 +6,9 @@ package com.foode.restaurant.build.api;
 
 
 import com.foode.restaurant.models.AllRecipeModel;
+import com.foode.restaurant.models.CommonModel;
 import com.foode.restaurant.models.Login;
+import com.foode.restaurant.models.ProfileModel;
 
 import java.util.HashMap;
 
@@ -30,5 +32,17 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("allRecipe")
     Call<AllRecipeModel> getAllRecipe(@FieldMap HashMap<String, String> params);
+
+    @FormUrlEncoded
+    @POST("updateRecipeStatus")
+    Call<CommonModel> updateInventory(@FieldMap HashMap<String, String> params);
+
+    @FormUrlEncoded
+    @POST("updateRestaurantStatus")
+    Call<CommonModel> updateRestaurant(@FieldMap HashMap<String, String> params);
+
+    @FormUrlEncoded
+    @POST("profile")
+    Call<ProfileModel> getProfile(@FieldMap HashMap<String, String> params);
 
 }
