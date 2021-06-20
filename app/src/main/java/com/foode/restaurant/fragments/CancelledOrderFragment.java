@@ -1,66 +1,122 @@
 package com.foode.restaurant.fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.foode.restaurant.R;
+import com.foode.restaurant.adapter.AllOrderAdapter;
+import com.foode.restaurant.build.api.ApiClient;
+import com.foode.restaurant.build.api.ApiInterface;
+import com.foode.restaurant.common.AppSettings;
+import com.foode.restaurant.helper.ConnectionHelper;
+import com.foode.restaurant.models.PendingOrderModel;
+import com.foode.restaurant.utils.AppUtils;
+import com.foode.restaurant.view.BaseFragment;
+
+import java.util.HashMap;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link CancelledOrderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CancelledOrderFragment extends Fragment {
+public class CancelledOrderFragment extends BaseFragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public CancelledOrderFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CancelledOrderFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CancelledOrderFragment newInstance(String param1, String param2) {
-        CancelledOrderFragment fragment = new CancelledOrderFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    View view;
+    RecyclerView rvList;
+    TextView tvNoRecord;
+    ConnectionHelper connectionHelper;
+    ApiInterface apiInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cancelled_order, container, false);
+        return view=inflater.inflate(R.layout.fragment_cancelled_order, container, false);
+    }
+    void findViewById(View view) {
+        connectionHelper = new ConnectionHelper(mActivity);
+        apiInterface = ApiClient.getRetrofit().create(ApiInterface.class);
+        rvList = view.findViewById(R.id.rvList);
+        tvNoRecord = view.findViewById(R.id.tvNoRecord);
+
+        if (connectionHelper.isConnectingToInternet()) {
+            getCanceledOrder();
+        } else {
+            AppUtils.showToastSort(mActivity, getString(R.string.errorInternet));
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean visible) {
+        super.setUserVisibleHint(visible);
+        if (visible && isResumed()) {
+            //Only manually call onResume if fragment is already visible
+            //Otherwise allow natural fragment lifecycle to call onResume
+            onResume();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!getUserVisibleHint()) {
+
+            return;
+        }
+
+        findViewById(view);
+
+    }
+
+    void getCanceledOrder() {
+       // AppUtils.showRequestDialog(mActivity);
+        HashMap<String, String> hm = new HashMap<>();
+       hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        // hm.put("shop_id", "3");
+        hm.put("value", "3");
+        Call<PendingOrderModel> pendingOrderModelCall = apiInterface.getCancelledOrder(hm);
+        pendingOrderModelCall.enqueue(new Callback<PendingOrderModel>() {
+            @Override
+            public void onResponse(Call<PendingOrderModel> call, Response<PendingOrderModel> response) {
+                AppUtils.hideDialog();
+                PendingOrderModel pendingOrderModel = response.body();
+                if (pendingOrderModel.getStatus().equalsIgnoreCase("SUCCESS")) {
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 1);
+                    AllOrderAdapter allOrderAdapter = new AllOrderAdapter(mActivity, pendingOrderModel);
+                    rvList.setLayoutManager(gridLayoutManager);
+                    rvList.setAdapter(allOrderAdapter);
+                    tvNoRecord.setVisibility(View.GONE);
+                    rvList.setVisibility(View.VISIBLE);
+                } else {
+                    AppUtils.showToastSort(mActivity, pendingOrderModel.getMessage());
+                    tvNoRecord.setVisibility(View.VISIBLE);
+                    rvList.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PendingOrderModel> call, Throwable t) {
+                AppUtils.hideDialog();
+            }
+        });
+
+
     }
 }

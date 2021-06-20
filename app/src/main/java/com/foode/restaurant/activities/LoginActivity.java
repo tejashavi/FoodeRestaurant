@@ -1,7 +1,5 @@
 package com.foode.restaurant.activities;
 
-import androidx.core.content.ContextCompat;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -10,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.foode.restaurant.R;
 import com.foode.restaurant.build.api.ApiClient;
@@ -80,9 +80,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 return;
 
             case R.id.btnSignIn:
-                startActivity(new Intent(mActivity, MainActivity.class));
-                finish();
-               /* if (etEmailAddress.getText().toString().isEmpty()) {
+               /* startActivity(new Intent(mActivity, MainActivity2.class));
+                finish();*/
+                if (etEmailAddress.getText().toString().isEmpty()) {
                     AppUtils.showToastSort(mActivity, "Please enter email address");
                 } else if (etPassword.getText().toString().isEmpty()) {
                     AppUtils.showToastSort(mActivity, "Please enter password");
@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     login();
                 } else {
                     AppUtils.showToastSort(mActivity, getString(R.string.errorInternet));
-                }*/
+                }
 
                 return;
         }
@@ -110,7 +110,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 Login login = response.body();
                 if (login.getStatus().equalsIgnoreCase("SUCCESS")) {
                     AppSettings.putString(AppSettings.shopId, String.valueOf(login.getData().get(0).getId()));
-                    startActivity(new Intent(mActivity, MainActivity.class));
+                    startActivity(new Intent(mActivity, MainActivity2.class));
                     finish();
                 } else {
                     AppUtils.showToastSort(mActivity, login.getMessage());

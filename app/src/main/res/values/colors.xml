@@ -10,10 +10,12 @@
     <color name="colorSecondaryText">#888888</color>
     <color name="colorGreen">#00a551</color>
     <color name="colorRed">#b31101</color>
+    <color name="blue">#4507B3</color>
     <color name="colorWhite">#FFF</color>
     <color name="colorTextWhite">#FFF</color>
     <color name="colorTextBlack">#212121</color>
     <color name="background_color">#f5f5f5</color>
+    <color name="textColor">#FA928A</color>
 
     <color name="theme">#000000</color>
     <color name="grey">#a4a4a4</color>

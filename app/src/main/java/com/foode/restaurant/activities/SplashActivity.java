@@ -31,7 +31,7 @@ public class SplashActivity extends BaseActivity {
                     startActivity(new Intent(mActivity, LoginActivity.class));
                     finish();
                 } else {
-                    startActivity(new Intent(mActivity, MainActivity.class));
+                    startActivity(new Intent(mActivity, MainActivity2.class));
                     finish();
                 }
 

@@ -8,10 +8,9 @@
     tools:context="com.foode.restaurant.activities.SplashActivity">
 
     <ImageView
-        android:layout_width="229dp"
-        android:layout_height="243dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:scaleType="fitCenter"
         android:src="@drawable/logo"/>
 
 </LinearLayout>

@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_Order"
+            android:icon="@drawable/ic_order"
+            android:title="Orders" />
+        <item
+            android:id="@+id/nav_Sale"
+            android:icon="@drawable/ic_sale"
+            android:title="Sale" />
+        <item
+            android:id="@+id/nav_Menu"
+            android:icon="@drawable/ic_order"
+            android:title="Menu" />
+        <item
+            android:id="@+id/nav_AppSetting"
+            android:icon="@drawable/ic_sale"
+            android:title="AppSetting" />
+    </group>
 </menu>

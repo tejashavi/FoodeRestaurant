@@ -29,6 +29,7 @@ public final class RuntimePermissionHelper {
     public static final String CAMERA = Manifest.permission.CAMERA;
     public static final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     public static final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    public static final String CALL_PHONE = Manifest.permission.CALL_PHONE;
 
     private RuntimePermissionHelper(Activity activity)  {
         this.activity = activity;
@@ -49,6 +50,7 @@ public final class RuntimePermissionHelper {
         requiredPermissions.add(CAMERA);
         requiredPermissions.add(ACCESS_COARSE_LOCATION);
         requiredPermissions.add(ACCESS_FINE_LOCATION);
+        requiredPermissions.add(CALL_PHONE);
         //Add all the required permission in the list
     }
 
