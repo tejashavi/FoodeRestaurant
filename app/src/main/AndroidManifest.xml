@@ -41,6 +41,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustNothing" />
+        <service android:name=".helper.BackServices"/>
     </application>
 
 </manifest>

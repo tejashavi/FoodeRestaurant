@@ -16,6 +16,8 @@ import com.foode.restaurant.build.api.ApiClient;
 import com.foode.restaurant.build.api.ApiInterface;
 import com.foode.restaurant.common.AppSettings;
 import com.foode.restaurant.helper.ConnectionHelper;
+import com.foode.restaurant.interfaces.MarkAsReady;
+import com.foode.restaurant.models.CommonModel;
 import com.foode.restaurant.models.PendingOrderModel;
 import com.foode.restaurant.utils.AppUtils;
 import com.foode.restaurant.view.BaseFragment;
@@ -30,23 +32,26 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class AcceptedOrderFragment extends BaseFragment {
+public class AcceptedOrderFragment extends BaseFragment implements MarkAsReady {
 
 
     public AcceptedOrderFragment() {
         // Required empty public constructor
     }
+
     View view;
     RecyclerView rvList;
     TextView tvNoRecord;
     ConnectionHelper connectionHelper;
     ApiInterface apiInterface;
+    MarkAsReady markAsReady;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_accepted_order, container, false);
+        markAsReady = this;
         return view;
     }
 
@@ -62,15 +67,17 @@ public class AcceptedOrderFragment extends BaseFragment {
             AppUtils.showToastSort(mActivity, getString(R.string.errorInternet));
         }
     }
+
     @Override
     public void setUserVisibleHint(boolean visible) {
-        super.setUserVisibleHint( visible );
+        super.setUserVisibleHint(visible);
         if (visible && isResumed()) {
             //Only manually call onResume if fragment is already visible
             //Otherwise allow natural fragment lifecycle to call onResume
             onResume();
         }
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -82,10 +89,11 @@ public class AcceptedOrderFragment extends BaseFragment {
         findViewById(view);
 
     }
+
     void getAcceptedOrder() {
         //AppUtils.showRequestDialog(mActivity);
         HashMap<String, String> hm = new HashMap<>();
-         hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
         //hm.put("shop_id", "3");
         hm.put("value", "3");
         Call<PendingOrderModel> pendingOrderModelCall = apiInterface.getAcceptedOrder(hm);
@@ -96,7 +104,7 @@ public class AcceptedOrderFragment extends BaseFragment {
                 PendingOrderModel pendingOrderModel = response.body();
                 if (pendingOrderModel.getStatus().equalsIgnoreCase("SUCCESS")) {
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 1);
-                    AcceptedOrderAdapter acceptedOrderAdapter = new AcceptedOrderAdapter(mActivity, pendingOrderModel);
+                    AcceptedOrderAdapter acceptedOrderAdapter = new AcceptedOrderAdapter(mActivity, pendingOrderModel, markAsReady);
                     rvList.setLayoutManager(gridLayoutManager);
                     rvList.setAdapter(acceptedOrderAdapter);
                     tvNoRecord.setVisibility(View.GONE);
@@ -114,7 +122,32 @@ public class AcceptedOrderFragment extends BaseFragment {
             }
         });
 
-
     }
 
+    @Override
+    public void updateReady(int orderId) {
+        AppUtils.showRequestDialog(mActivity);
+        HashMap<String, String> hm = new HashMap<>();
+        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        hm.put("order_id", String.valueOf(orderId));
+        Call<CommonModel> commonModelCall = apiInterface.markAsReady(hm);
+        commonModelCall.enqueue(new Callback<CommonModel>() {
+            @Override
+            public void onResponse(Call<CommonModel> call, Response<CommonModel> response) {
+                AppUtils.hideDialog();
+                CommonModel commonModel = response.body();
+                if (commonModel.getStatus().equalsIgnoreCase("SUCCESS")) {
+                    AppUtils.showToastSort(mActivity, commonModel.getMessage());
+                    AllOrderFragment.viewPager.setCurrentItem(2);
+                } else {
+                    AppUtils.showToastSort(mActivity, commonModel.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommonModel> call, Throwable t) {
+                AppUtils.hideDialog();
+            }
+        });
+    }
 }

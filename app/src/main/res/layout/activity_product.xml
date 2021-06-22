@@ -42,11 +42,16 @@
             android:layout_height="@dimen/_1sdp"
             android:background="@color/grey" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvList"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:listitem="@layout/item_product_list" />
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/item_product_list" />
+        </androidx.core.widget.NestedScrollView>
 
         <TextView
             android:id="@+id/tvNoRecord"

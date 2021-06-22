@@ -21,6 +21,7 @@ import com.foode.restaurant.fragments.AllOrderFragment;
 import com.foode.restaurant.fragments.AppSettingFragment;
 import com.foode.restaurant.fragments.MenuFragment;
 import com.foode.restaurant.fragments.SaleFragment;
+import com.foode.restaurant.helper.BackServices;
 import com.foode.restaurant.helper.ConnectionHelper;
 import com.foode.restaurant.models.ShopStatusModel;
 import com.foode.restaurant.utils.AppUtils;
@@ -83,6 +84,8 @@ public class MainActivity2 extends BaseActivity implements NavigationView.OnNavi
                 }
             }
         });
+
+        startService(new Intent(this, BackServices.class));
     }
 
     @Override
@@ -143,7 +146,7 @@ public class MainActivity2 extends BaseActivity implements NavigationView.OnNavi
     void updateShopStatus() {
         AppUtils.showRequestDialog(mActivity);
         HashMap<String, String> hm = new HashMap<>();
-         hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
         //hm.put("shop_id", "3");
         Call<ShopStatusModel> shopStatusModelCall = apiInterface.updateShopStatus(hm);
         shopStatusModelCall.enqueue(new Callback<ShopStatusModel>() {

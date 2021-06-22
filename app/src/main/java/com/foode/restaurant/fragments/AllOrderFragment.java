@@ -26,8 +26,8 @@ import java.util.List;
  */
 public class AllOrderFragment extends BaseFragment {
 
-    TabLayout tabLayout;
-    ViewPager viewPager;
+    public static TabLayout tabLayout;
+    public static ViewPager viewPager;
 
     public AllOrderFragment() {
         // Required empty public constructor
@@ -60,8 +60,8 @@ public class AllOrderFragment extends BaseFragment {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
         adapter.addFragment(new PendingOrderFragment(), "Pending");
         adapter.addFragment(new AcceptedOrderFragment(), "Accepted");
-        adapter.addFragment(new PreparingOrderFragment(), "Preparing");
-       // adapter.addFragment(new OnTheWayOrderFragment(), "OnTheWay");
+        adapter.addFragment(new PreparingOrderFragment(), "Prepared");
+        // adapter.addFragment(new OnTheWayOrderFragment(), "OnTheWay");
         adapter.addFragment(new DeliveredOrderFragment(), "Delivered");
         adapter.addFragment(new CancelledOrderFragment(), "Cancelled");
 

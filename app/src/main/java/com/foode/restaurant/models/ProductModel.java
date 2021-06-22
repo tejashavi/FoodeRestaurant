@@ -32,6 +32,9 @@ public  class ProductModel {
 
     public static class DATA {
         @Expose
+        @SerializedName("status")
+        private String status;
+        @Expose
         @SerializedName("orignal_price")
         private int orignalPrice;
         @Expose
@@ -43,6 +46,25 @@ public  class ProductModel {
         @Expose
         @SerializedName("name")
         private String name;
+        @Expose
+        @SerializedName("id")
+        private String id;
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
 
         public int getOrignalPrice() {
             return orignalPrice;

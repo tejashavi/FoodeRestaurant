@@ -16,16 +16,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.foode.restaurant.R;
 import com.foode.restaurant.activities.OrderDetailActivity;
+import com.foode.restaurant.interfaces.UpdateOrder;
 import com.foode.restaurant.models.PendingOrderModel;
 import com.squareup.picasso.Picasso;
 
 public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapter.ViewHolder> {
     Context context;
     PendingOrderModel pendingOrderModel;
+    UpdateOrder updateOrder;
 
-    public PendingOrderAdapter(Context context, PendingOrderModel pendingOrderModel) {
+    public PendingOrderAdapter(Context context, PendingOrderModel pendingOrderModel, UpdateOrder updateOrder) {
         this.context = context;
         this.pendingOrderModel = pendingOrderModel;
+        this.updateOrder = updateOrder;
     }
 
     @NonNull
@@ -50,7 +53,20 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
         holder.rlMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, OrderDetailActivity.class).putExtra("id",pendingOrderModel.getData().get(position).getUserInfo().getOrderId()+""));
+                context.startActivity(new Intent(context, OrderDetailActivity.class).putExtra("id", pendingOrderModel.getData().get(position).getUserInfo().getOrderId() + ""));
+            }
+        });
+
+        holder.btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateOrder.UpdateStatus(pendingOrderModel.getData().get(position).getUserInfo().getOrderId(), "1");
+            }
+        });
+        holder.btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateOrder.UpdateStatus(pendingOrderModel.getData().get(position).getUserInfo().getOrderId(), "2");
             }
         });
     }

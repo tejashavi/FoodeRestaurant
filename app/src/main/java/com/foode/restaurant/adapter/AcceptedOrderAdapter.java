@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,15 +16,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.foode.restaurant.R;
 import com.foode.restaurant.activities.OrderDetailActivity;
+import com.foode.restaurant.interfaces.MarkAsReady;
+import com.foode.restaurant.interfaces.UpdateOrder;
 import com.foode.restaurant.models.PendingOrderModel;
 import com.squareup.picasso.Picasso;
 
 public class AcceptedOrderAdapter extends RecyclerView.Adapter<AcceptedOrderAdapter.ViewHolder> {
     Context context;
     PendingOrderModel pendingOrderModel;
-    public AcceptedOrderAdapter(Context context, PendingOrderModel pendingOrderModel) {
+    MarkAsReady markAsReady;
+
+    public AcceptedOrderAdapter(Context context, PendingOrderModel pendingOrderModel, MarkAsReady markAsReady) {
         this.context = context;
         this.pendingOrderModel = pendingOrderModel;
+        this.markAsReady = markAsReady;
     }
 
     @NonNull
@@ -49,7 +55,14 @@ public class AcceptedOrderAdapter extends RecyclerView.Adapter<AcceptedOrderAdap
         holder.rlMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, OrderDetailActivity.class).putExtra("id",pendingOrderModel.getData().get(position).getUserInfo().getOrderId()+""));
+                context.startActivity(new Intent(context, OrderDetailActivity.class).putExtra("id", pendingOrderModel.getData().get(position).getUserInfo().getOrderId() + ""));
+            }
+        });
+        holder.btnReady.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                markAsReady.updateReady(pendingOrderModel.getData().get(position).getUserInfo().getOrderId());
+
             }
         });
     }
@@ -64,6 +77,7 @@ public class AcceptedOrderAdapter extends RecyclerView.Adapter<AcceptedOrderAdap
         ImageView ivUserProfile;
         TextView tvUserName, tvPaymentMode, tvTotalAmount, tvDropLocation;
         RecyclerView rvList;
+        Button btnReady;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -75,6 +89,7 @@ public class AcceptedOrderAdapter extends RecyclerView.Adapter<AcceptedOrderAdap
             tvTotalAmount = itemView.findViewById(R.id.tvTotalAmount);
             tvDropLocation = itemView.findViewById(R.id.tvDropLocation);
             rvList = itemView.findViewById(R.id.rvList);
+            btnReady = itemView.findViewById(R.id.btnReady);
 
         }
     }

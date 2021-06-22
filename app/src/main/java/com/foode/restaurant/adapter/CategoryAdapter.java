@@ -32,7 +32,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Picasso.get().load(categoryModel.getData().get(position).getUrl()).placeholder(R.drawable.ic_baseline_person_24).into(holder.ivCategoryImage);
+        Picasso.get().load(categoryModel.getData().get(position).getUrl()).placeholder(R.mipmap.placeholder).into(holder.ivCategoryImage);
 
         holder.tvCategoryName.setText(categoryModel.getData().get(position).getName());
 

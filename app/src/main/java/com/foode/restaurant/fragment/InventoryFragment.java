@@ -38,7 +38,7 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class InventoryFragment extends BaseFragment implements UpdateInventory {
+public class InventoryFragment extends BaseFragment  {
 
 
     public InventoryFragment() {
@@ -57,7 +57,6 @@ public class InventoryFragment extends BaseFragment implements UpdateInventory {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_inventory, container, false);
-        updateInventory = this;
         findViewById(view);
         return view;
     }
@@ -100,30 +99,5 @@ public class InventoryFragment extends BaseFragment implements UpdateInventory {
         });
     }
 
-    @Override
-    public void updateStatus(String productId, String status) {
-        HashMap<String, String> hm = new HashMap<>();
-        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
-        hm.put("product_id", productId);
-        hm.put("recipe_status", status);
 
-        Call<CommonModel> commonModelCall = apiInterface.updateInventory(hm);
-        commonModelCall.enqueue(new Callback<CommonModel>() {
-            @Override
-            public void onResponse(Call<CommonModel> call, Response<CommonModel> response) {
-                CommonModel commonModel = response.body();
-                if (commonModel.getStatus().equalsIgnoreCase("SUCCESS")) {
-                    getRecipe();
-                } else {
-                    AppUtils.showToastSort(mActivity, "Something went wrong");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CommonModel> call, Throwable t) {
-
-            }
-        });
-
-    }
 }

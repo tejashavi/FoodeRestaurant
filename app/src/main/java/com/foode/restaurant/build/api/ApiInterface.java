@@ -95,4 +95,16 @@ public interface ApiInterface {
     @FormUrlEncoded
     @POST("CategoryList")
     Call<CategoryModel> CategoryList(@FieldMap HashMap<String, String> params);
+
+    @FormUrlEncoded
+    @POST("updateStatusOfIncommingOrder")
+    Call<CommonModel> updateStatusOfIncomingOrder(@FieldMap HashMap<String, String> params);
+
+    @FormUrlEncoded
+    @POST("updateOrderTime")
+    Call<CommonModel> updateOrderTime(@FieldMap HashMap<String, String> params);
+
+    @FormUrlEncoded
+    @POST("markasready")
+    Call<CommonModel> markAsReady(@FieldMap HashMap<String, String> params);
 }

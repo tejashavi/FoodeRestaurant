@@ -5,19 +5,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.foode.restaurant.R;
-import com.foode.restaurant.adapter.CategoryAdapter;
 import com.foode.restaurant.adapter.ProductAdapter;
 import com.foode.restaurant.build.api.ApiClient;
 import com.foode.restaurant.build.api.ApiInterface;
 import com.foode.restaurant.common.AppSettings;
 import com.foode.restaurant.helper.ConnectionHelper;
 import com.foode.restaurant.helper.GridSpacingItemDecoration;
-import com.foode.restaurant.models.CategoryModel;
+import com.foode.restaurant.interfaces.UpdateInventory;
+import com.foode.restaurant.models.CommonModel;
 import com.foode.restaurant.models.ProductModel;
 import com.foode.restaurant.utils.AppUtils;
 import com.foode.restaurant.view.BaseActivity;
@@ -28,17 +27,21 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ProductActivity extends BaseActivity {
+public class ProductActivity extends BaseActivity implements UpdateInventory {
     RecyclerView rvList;
     TextView tvNoRecord;
     ConnectionHelper connectionHelper;
     ApiInterface apiInterface;
     ImageView ivBack;
+    ProductAdapter productAdapter;
+    UpdateInventory updateInventory;
+   public static ProductModel productModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
+        updateInventory = this;
         findViewById();
     }
 
@@ -67,17 +70,17 @@ public class ProductActivity extends BaseActivity {
     void getProductList() {
         AppUtils.showRequestDialog(mActivity);
         HashMap<String, String> hm = new HashMap<>();
-       hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
         //   hm.put("shop_id", "33");
         Call<ProductModel> categoryModelCall = apiInterface.getProductList(hm);
         categoryModelCall.enqueue(new Callback<ProductModel>() {
             @Override
             public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
                 AppUtils.hideDialog();
-                ProductModel productModel = response.body();
+                productModel = response.body();
                 if (productModel.getStatus().equalsIgnoreCase("SUCCESS")) {
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 2);
-                    ProductAdapter productAdapter = new ProductAdapter(mActivity, productModel);
+                    productAdapter = new ProductAdapter(mActivity, productModel, updateInventory);
                     rvList.setLayoutManager(gridLayoutManager);
                     rvList.setAdapter(productAdapter);
                     tvNoRecord.setVisibility(View.GONE);
@@ -98,4 +101,31 @@ public class ProductActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void updateStatus(String productId, ProductModel productModel) {
+        HashMap<String, String> hm = new HashMap<>();
+        hm.put("shop_id", AppSettings.getString(AppSettings.shopId));
+        hm.put("product_id", productId);
+        Call<CommonModel> commonModelCall = apiInterface.updateInventory(hm);
+        commonModelCall.enqueue(new Callback<CommonModel>() {
+            @Override
+            public void onResponse(Call<CommonModel> call, Response<CommonModel> response) {
+                CommonModel commonModel = response.body();
+                if (commonModel.getStatus().equalsIgnoreCase("SUCCESS")) {
+                    for (int i = 0; i < productModel.getData().size(); i++) {
+                        productModel.getData().get(i).setStatus(commonModel.getPRODUCT_STATUS());
+                    }
+                    if (productAdapter != null)
+                        productAdapter.notifyDataSetChanged();
+                } else {
+                    AppUtils.showToastSort(mActivity, "Something went wrong");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CommonModel> call, Throwable t) {
+
+            }
+        });
+    }
 }
